@@ -11,13 +11,14 @@ public class Game {
         Invader invader1 = new Invader(readFile("invader-1.txt"));
         Invader invader2 = new Invader(readFile("invader-2.txt"));
         Radar radar = new Radar(readFile("radar.txt"));
-        radar.setRadarAccuracy(2);
+        radar.setRadarAccuracy(0.85);
 
-        invader1.setThreshold(0.7);
-        radar.scan(invader1);
-
-        invader2.setThreshold(11);
-        radar.scan(invader2);
+        System.out.println("---------------------------------------------------");
+        invader1.setThreshold(0.5);
+        System.out.println(radar.scan(invader1));
+        System.out.println("---------------------------------------------------");
+        invader2.setThreshold(0.5);
+        System.out.println(radar.scan(invader2));
     }
 
     public static List<String> readFile(String name) {

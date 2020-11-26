@@ -15,15 +15,15 @@ public class Radar extends GameObject {
         super(lines);
     }
 
-    public void scan(Invader invader) {
+    public String scan(Invader invader) {
 
-        workArea = addRadarShadow(invader.getWidth() - (int) Math.round(invader.getWidth() * invader.getThreshold()),
-                invader.getHeight() - (int) Math.round(invader.getHeight() * invader.getThreshold()));
+        workArea = addRadarShadow(invader.getWidth() - invader.getVisibleWidth(),
+                invader.getHeight() - invader.getVisibleHeight());
 
         List<RadarSector> result = new ArrayList<>();
 
         log.debug("Scanning for invader ");
-        log.debug("\n--------------\n" + invader.toString() + "\n--------------");
+        log.debug("\n" + invader.toString());
 
         IntStream.range(0, workArea.getHeight() - invader.getHeight())
                 .forEach(line -> {
@@ -33,14 +33,60 @@ public class Radar extends GameObject {
                                 RadarSector sector =
                                         takeRadarSector(workArea, line, col, invader.getHeight(), invader.getWidth());
 
-                                if (sector.getGameObject().score(invader) > getRadarAccuracy()) {
-                                    System.out.println("line:" + line);
-                                    System.out.println("Col:" + col);
-                                    System.out.println(sector.getGameObject());
+                                if (sector.getGameObject().score(invader) >= getRadarAccuracy()) {
+                                    log.debug("line:" + sector.getY());
+                                    log.debug("Col:" + sector.getX());
+                                    log.debug("\n" + sector.getGameObject().toString());
                                     result.add(sector);
                                 }
                             });
                         });
+
+        return getScanImage(result,
+                invader.getWidth() - invader.getVisibleWidth(),
+                invader.getHeight() - invader.getVisibleHeight());
+    }
+
+    private String getScanImage(List<RadarSector> invaders, int padX, int padY) {
+
+        String line = initLine(getWidth() + 2 * padX, ' ');
+
+        List<String> scan = new ArrayList<>();
+        List<String> cleanScan = new ArrayList<>();
+
+        IntStream.range(0, getHeight() + 2 * padY).forEach(i -> scan.add(line));
+
+        invaders.forEach(invader -> {
+            for (int y = 0; y < invader.getGameObject().getHeight(); y++) {
+
+                StringBuilder sb = new StringBuilder(scan.get(y + invader.getY()));
+
+                StringBuilder returnLine = sb.replace(invader.getX(),
+                        invader.getGameObject().getWidth() + invader.getX(),
+                        invader.getGameObject().getGameObjectLines().get(y));
+
+                scan.set(y + invader.getY(), returnLine.toString());
+            }
+
+        });
+
+        for (int i = padY; i <= getHeight(); i++) {
+            String str = scan.get(i).substring(padX, getWidth() + padX);
+            cleanScan.add(str);
+        }
+
+
+        return String.join("\n", cleanScan);
+    }
+
+    private String initLine(int width, char pad) {
+        String initLine = new String();
+
+        for (int i=0; i < width; i++){
+            initLine += pad;
+        }
+
+        return initLine;
     }
 
     private RadarSector takeRadarSector(GameObject workArea, int line, int col, int height, int width) {
@@ -49,7 +95,7 @@ public class Radar extends GameObject {
                 .mapToObj(l -> workArea.getGameObjectLines().get(l).substring(col, col + width))
                 .collect(Collectors.toList());
 
-        return new RadarSector(new GameObject(list), line, col);
+        return new RadarSector(new GameObject(list), col, line);
     }
 
     private GameObject addRadarShadow(int x, int y) {
@@ -60,9 +106,9 @@ public class Radar extends GameObject {
         int hight = this.getHeight() + 2 * y;
         int width = this.getWidth() + 2 * x;
 
-        String shadowLine = s.repeat(this.getWidth() + 2 * x);
+        String shadowLine = s.repeat(width);
 
-        for (int i=0; i < x; i++  ) {
+        for (int i=0; i < y; i++  ) {
             workAreaList.add(shadowLine);
         }
 
@@ -71,7 +117,7 @@ public class Radar extends GameObject {
             workAreaList.add(tempLine);
         }
 
-        for (int i=0; i < x; i++  ) {
+        for (int i=0; i < y; i++  ) {
             workAreaList.add(shadowLine);
         }
         return new GameObject(workAreaList);
@@ -105,6 +151,14 @@ public class Radar extends GameObject {
 
         GameObject getGameObject() {
             return gameObject;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
         }
     }
 }

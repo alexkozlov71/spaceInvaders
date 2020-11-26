@@ -21,9 +21,9 @@ class RadarTest {
     @Test
     void scan() {
         Invader invader = new Invader(List.of("ooo", "ooo"));
-        invader.setThreshold(0.7);
-        radar.setRadarAccuracy(0.9);
-        radar.scan(invader);
+        invader.setThreshold(0.5);
+        radar.setRadarAccuracy(0.8);
+        System.out.println(radar.scan(invader) + "*");
     }
 
     @Test

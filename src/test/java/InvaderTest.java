@@ -23,7 +23,20 @@ class InvaderTest {
 
     @Test
     void setThreshold() {
-        invader.setThreshold(0.5f);
-        assertEquals(0.5f, invader.getThreshold());
+        invader.setThreshold(0.7);
+        assertEquals(0.7, invader.getThreshold());
     }
+
+    @Test
+    void getVisibleSize() {
+
+        invader.setThreshold(0.7);
+        assertEquals(2, invader.getVisibleWidth());
+        assertEquals(2, invader.getVisibleHeight());
+
+        invader.setThreshold(1);
+        assertEquals(3, invader.getVisibleWidth());
+        assertEquals(3, invader.getVisibleHeight());
+    }
+
 }
