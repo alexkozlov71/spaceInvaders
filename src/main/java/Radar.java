@@ -15,7 +15,17 @@ public class Radar extends GameObject {
         super(lines);
     }
 
-    public String scan(Invader invader) {
+    /*
+    Add padding to radar image. Padded sections will be assumed as a 100% match
+     to the image outside of the visible area.
+
+     Scan radar by taking snapshots of the screen equal in size to the invader size
+
+     Produce result list of snapshots with sufficient similarity factor
+
+
+     */
+    public List<String> scan(Invader invader) {
 
         workArea = addRadarShadow(invader.getWidth() - invader.getVisibleWidth(),
                 invader.getHeight() - invader.getVisibleHeight());
@@ -25,9 +35,9 @@ public class Radar extends GameObject {
         log.debug("Scanning for invader ");
         log.debug("\n" + invader.toString());
 
-        IntStream.range(0, workArea.getHeight() - invader.getHeight())
+        IntStream.rangeClosed(0, workArea.getHeight() - invader.getHeight())
                 .forEach(line -> {
-                    IntStream.range(0, workArea.getWidth() - invader.getWidth())
+                    IntStream.rangeClosed(0, workArea.getWidth() - invader.getWidth())
                             .forEach(col -> {
 
                                 RadarSector sector =
@@ -46,8 +56,10 @@ public class Radar extends GameObject {
                 invader.getWidth() - invader.getVisibleWidth(),
                 invader.getHeight() - invader.getVisibleHeight());
     }
-
-    private String getScanImage(List<RadarSector> invaders, int padX, int padY) {
+/*
+Remove padding from radar image and produce clean image equal in size to the original radar image size
+ */
+    private List<String> getScanImage(List<RadarSector> invaders, int padX, int padY) {
 
         String line = initLine(getWidth() + 2 * padX, ' ');
 
@@ -70,13 +82,13 @@ public class Radar extends GameObject {
 
         });
 
-        for (int i = padY; i <= getHeight(); i++) {
+        for (int i = padY; i < getHeight() + padY; i++) {
             String str = scan.get(i).substring(padX, getWidth() + padX);
             cleanScan.add(str);
         }
 
 
-        return String.join("\n", cleanScan);
+        return cleanScan;
     }
 
     private String initLine(int width, char pad) {
@@ -88,7 +100,9 @@ public class Radar extends GameObject {
 
         return initLine;
     }
-
+/*
+Take a snapshot of a radar area equal to invader size
+ */
     private RadarSector takeRadarSector(GameObject workArea, int line, int col, int height, int width) {
 
         List<String> list = IntStream.range(line, line + height)
@@ -97,13 +111,15 @@ public class Radar extends GameObject {
 
         return new RadarSector(new GameObject(list), col, line);
     }
+/*
+Add margin of "*" to radar area.
+ */
 
     private GameObject addRadarShadow(int x, int y) {
 
         List<String> workAreaList = new ArrayList<>();
         String s = "*";
 
-        int hight = this.getHeight() + 2 * y;
         int width = this.getWidth() + 2 * x;
 
         String shadowLine = s.repeat(width);
@@ -129,7 +145,7 @@ public class Radar extends GameObject {
 
     public void setRadarAccuracy(double radarAccuracy) {
 
-        if (radarAccuracy <= 1 && radarAccuracy >= 0) {
+        if (radarAccuracy <= 1 && radarAccuracy > 0) {
             this.radarAccuracy = radarAccuracy;
        } else {
             log.warn("Invalid value for Radar Accuracy");
@@ -141,7 +157,6 @@ public class Radar extends GameObject {
         GameObject gameObject;
         int x;
         int y;
-
 
         RadarSector(GameObject gameObject, int x, int y) {
             this.gameObject = gameObject;
@@ -160,5 +175,6 @@ public class Radar extends GameObject {
         public int getY() {
             return y;
         }
+
     }
 }

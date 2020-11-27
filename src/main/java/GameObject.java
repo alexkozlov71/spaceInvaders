@@ -7,15 +7,10 @@ class GameObject {
     private int width;
     private List<String> gameObjectLines;
 
-    public GameObject() {
+    public GameObject(List<String> lines) {
         this.gameObjectLines = new ArrayList<>();
         this.height = 0;
-    }
-
-    public GameObject(List<String> lines) {
-        this();
         loadFromList(lines);
-
     }
 
     public void loadFromList(List<String> lines) {
@@ -35,7 +30,7 @@ class GameObject {
         double objectSize = (double) getWidth() * getHeight();
 
         if (this.width != o1.width || this.height != o1.height) {
-            throw new IllegalStateException("Should never happen objects not equal ");
+            throw new IllegalStateException("Should never happen. objects should be equal ");
         }
         for (int i = 0; i < this.getHeight(); i++) {
 

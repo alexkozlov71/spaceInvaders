@@ -28,6 +28,12 @@ class InvaderTest {
     }
 
     @Test
+    void setInvalidThreshold() {
+        invader.setThreshold(2);
+        assertEquals(0.5, invader.getThreshold());
+    }
+
+    @Test
     void getVisibleSize() {
 
         invader.setThreshold(0.7);

@@ -8,9 +8,26 @@ public class Invader extends GameObject{
     private int visibleWidth;
     private int visibleHeight;
 
-    public Invader() {
-        super();
+    public Invader(List<String> lines) {
+        super(lines);
+        setVisibleSize();
     }
+
+    private void setVisibleSize() {
+        this.visibleWidth = (int) Math.round(getWidth() * getThreshold());
+        this.visibleHeight = (int) Math.round(getHeight() * getThreshold());
+    }
+
+    public void setThreshold(double threshold) {
+        if (threshold <= 1 && threshold > 0) {
+            this.threshold = threshold;
+            setVisibleSize();
+        } else {
+            log.error("Invalid value provided for invader threshold");
+            log.error("Using value of " + getThreshold());
+        }
+    }
+
     public int getVisibleWidth() {
         return visibleWidth;
     }
@@ -19,28 +36,7 @@ public class Invader extends GameObject{
         return visibleHeight;
     }
 
-    private void setVisibleSize() {
-        this.visibleWidth = (int) Math.round(getWidth() * getThreshold());
-        this.visibleHeight = (int) Math.round(getHeight() * getThreshold());
-    }
-
-
-    public Invader(List<String> lines) {
-        super(lines);
-        setVisibleSize();
-    }
-
     public double getThreshold() {
         return threshold;
-    }
-
-    public void setThreshold(double threshold) {
-        if (threshold <= 1 && threshold >= 0) {
-            this.threshold = threshold;
-            setVisibleSize();
-        } else {
-            log.error("Invalid value provided for invader threshold");
-            log.error("Using value of " + getThreshold());
-        }
     }
 }
