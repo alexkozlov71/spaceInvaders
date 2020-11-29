@@ -23,8 +23,8 @@ public class Invader extends GameObject{
             this.threshold = threshold;
             setVisibleSize();
         } else {
-            log.error("Invalid value provided for invader threshold");
-            log.error("Using value of " + getThreshold());
+            log.warn("Invalid value provided for invader threshold");
+            log.warn("Using value of " + getThreshold());
         }
     }
 
