@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 class GameObject {
     private int height;
     private int width;
-    private List<String> gameObjectLines;
+    private final List<String> gameObjectLines;
 
     public GameObject(List<String> lines) {
         this.gameObjectLines = new ArrayList<>();

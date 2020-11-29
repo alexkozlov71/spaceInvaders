@@ -36,21 +36,19 @@ public class Radar extends GameObject {
         log.debug("\n" + invader.toString());
 
         IntStream.rangeClosed(0, workArea.getHeight() - invader.getHeight())
-                .forEach(line -> {
-                    IntStream.rangeClosed(0, workArea.getWidth() - invader.getWidth())
-                            .forEach(col -> {
+                .forEach(line -> IntStream.rangeClosed(0, workArea.getWidth() - invader.getWidth())
+                        .forEach(col -> {
 
-                                RadarSector sector =
-                                        takeRadarSector(workArea, line, col, invader.getHeight(), invader.getWidth());
+                            RadarSector sector =
+                                    takeRadarSector(workArea, line, col, invader.getHeight(), invader.getWidth());
 
-                                if (sector.getGameObject().score(invader) >= getRadarAccuracy()) {
-                                    log.debug("line:" + sector.getY());
-                                    log.debug("Col:" + sector.getX());
-                                    log.debug("\n" + sector.getGameObject().toString());
-                                    result.add(sector);
-                                }
-                            });
-                        });
+                            if (sector.getGameObject().score(invader) >= getRadarAccuracy()) {
+                                log.debug("line:" + sector.getY());
+                                log.debug("Col:" + sector.getX());
+                                log.debug("\n" + sector.getGameObject().toString());
+                                result.add(sector);
+                            }
+                        }));
 
         return getScanImage(result,
                 invader.getWidth() - invader.getVisibleWidth(),
@@ -92,13 +90,11 @@ Remove padding from radar image and produce clean image equal in size to the ori
     }
 
     private String initLine(int width, char pad) {
-        String initLine = new String();
+        StringBuilder initLine = new StringBuilder();
 
-        for (int i=0; i < width; i++){
-            initLine += pad;
-        }
+        initLine.append(String.valueOf(pad).repeat(Math.max(0, width)));
 
-        return initLine;
+        return initLine.toString();
     }
 /*
 Take a snapshot of a radar area equal to invader size
@@ -153,7 +149,7 @@ Add margin of "*" to radar area.
         }
     }
 
-    private class RadarSector {
+    private static class RadarSector {
         GameObject gameObject;
         int x;
         int y;
