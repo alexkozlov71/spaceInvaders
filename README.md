@@ -7,7 +7,7 @@
 Task of the assignment is to detect invader ships on the radar screen. Screen is noisy and 1:1 matching cannot be used. Fuzzy matching will be used to identify invaders on the screen.
 For this we will take sectors of the radar screen (equal in size to the invader ship) and calculate similarity factor of this sector to the original invader image.
 
-Similarity factor is calculated by dividing a total number of pixels equal (in radar sector and invader) by total number of pixels in the invader image.
+Similarity factor is calculated by dividing a number of pixels equal (in radar sector and invader) by the number of pixels in the invader image.
 
 If similarity factor is greater or equal to the radar Accuracy, location and value of the screen sector is saved for future reference.
 
@@ -17,8 +17,8 @@ Logic to match only partially displayed invaders was added. Invader can be parti
 Section of the invader located in the Shadow Area is assumed to be 100% match and similarity factor is calculated based on the visible sections only.
 
 ### Configuration
-Percentage of the invader visible on the radar is control through *invader.setThreshold(Double)* value; should be between 0 and 1.
-Similarity factor of the objects to display on the radar is controlled by *radar.setRadarAccuracy(Double)* value; should be between 0 and 1.
+1. Percentage of the invader visible on the radar is control through *invader.setThreshold(Double)* value; should be between 0 and 1.
+2. Similarity factor of the objects to display on the radar is controlled by *radar.setRadarAccuracy(Double)* value; should be between 0 and 1.
 
 
 ### Project notes
